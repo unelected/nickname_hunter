@@ -42,7 +42,7 @@ class AccountsData:
 
         This method reads the "data.json" file and sets the following attributes
         """
-        with open("data.json", encoding="utf-8") as f:
+        with open("data.json", encoding = "utf-8") as f:
             data: dict[str, Any] = json.load(f)
 
         self.entertainers = data["entertainers"]

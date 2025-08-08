@@ -16,7 +16,9 @@ Typical usage example:
 """
 import asyncio
 import logging
+import os
 
+from dotenv import load_dotenv
 from zafiaonline.structures import PacketDataKeys
 from zafiaonline.main import Client
 
@@ -61,7 +63,10 @@ class Bot:
             Exception: Propagates any unexpected exceptions from `check_accounts()`
                 if not handled internally.
         """
-        await self.main.create_connection()
+        load_dotenv()
+        account_nickname: str = os.getenv("EMAIL") or ""
+        account_password: str = os.getenv("PASSWORD") or ""
+        await self.main.sign_in(account_nickname, account_password)
         while True:
             await self.check_accounts()
             await asyncio.sleep(sleep_time)
@@ -87,34 +92,41 @@ class Bot:
             try:
                 tracked: list[str] = self._trackeds[i]
             except Exception as e:
-                logging.error(f"ошибка {e}")
+                logging.error(f"Error: {e}")
                 continue
             account: dict | None = await self.get_account(tracked)
-            if account is None:
-                raise AttributeError("account is None")
-
-            try:
-
-                presearched_nickname: str | None = account.get(PacketDataKeys.USER, None)
-                if presearched_nickname is not None:
-                    searched_nickname: str | None = presearched_nickname[PacketDataKeys.USERNAME] or None
-                else:
-                    continue
-
-            except Exception as e:
-                logging.critical(f"username in account does not exist, {e}")
-                raise
+            searched_nickname: str | None = self.get_searched_nickname(account)
 
             if tracked[1] == "" and searched_nickname is not None:
                 self._trackeds[i][1] = searched_nickname
-                logging.info(f"nickname: {searched_nickname}")
-                logging.info('~set nickname')
-
+                logging.info(f"Nickname: {searched_nickname}\n~Set nickname")
             elif searched_nickname != tracked[1]: # if nickname is not old nickname
                 await self.enter_nickname(tracked[1])
                 del self._trackeds[i]
             await asyncio.sleep(sleep_time)
         self._trackeds[:] = [trackeded for trackeded in self._trackeds if trackeded is not None]
+
+    def get_searched_nickname(self, account: dict | None) -> str | None:
+        """
+        Extracts the searched nickname from an account dictionary.
+
+        Retrieves the value of `PacketDataKeys.USERNAME` nested under
+        `PacketDataKeys.USER` in the provided account data.
+
+        Args:
+            account (dict | None): A dictionary containing account data,
+                or None if no account information is available.
+
+        Returns:
+            str | None: The extracted nickname if found, otherwise None.
+        """
+        if account is None:
+            return None
+        player: dict | None = account.get(PacketDataKeys.USER, None)
+        if player is not None:
+            searched_nickname: str | None = player.get(PacketDataKeys.USERNAME, None)
+            return searched_nickname
+        return None
 
     async def fetch_user(self, user_id: str) -> dict | None:
         """
@@ -148,7 +160,7 @@ class Bot:
         Returns:
             None
         """
-        logging.error(f"Ошибка при поиске игрока: {error}")
+        logging.error(f"Error with search player: {error}")
         await asyncio.sleep(sleep_time)
         return None
 
@@ -167,7 +179,7 @@ class Bot:
             dict | None: A dictionary with account data if found, otherwise None.
         """
         if not tracked:
-            logging.error("Список tracked пуст, невозможно получить пользователя")
+            logging.error("List tracked is empty, unable to obtain player")
             return None
 
         return await self.fetch_user(tracked[0])
@@ -185,14 +197,14 @@ class Bot:
             index (int): The index of the account in the entertainers list.
         """
         if not self._entertainers:
-            logging.error("Нет доступных учетных записей")
+            logging.error("No accounts available")
             return
 
         if 0 <= index <= len(self._entertainers):
             await self.main.sign_in(self._entertainers[index][0], self._entertainers[index][1])
             del self._entertainers[index]
         else:
-            logging.error("Попытка входа с несуществующей учетной записью")
+            logging.error("Attempt to log in with a non-existent account")
 
     async def set_nickname(self, nickname: str) -> None:
         """
@@ -202,7 +214,7 @@ class Bot:
             nickname (str): The nickname to assign to the user.
         """
         await self.main.username_set(nickname)
-        logging.info(f"Заняли ник {nickname}")
+        logging.info(f"Took the nickname: {nickname}")
 
     async def enter_nickname(self, nickname: str, 
                              priority: bool = False,
@@ -237,6 +249,6 @@ if __name__ == "__main__":
     bot: Bot = Bot()
 
     try:
-        asyncio.run(bot.main_function(.5))
+        asyncio.run(bot.main_function(sleep_time = .5))
     except KeyboardInterrupt:
         logging.info("успешный выход из программы")
