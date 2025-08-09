@@ -4,9 +4,9 @@
 # This file is part of the project and is licensed under the MIT License.
 # See the LICENSE file in the root of this repository for full license text.
 
-"""Bot automation for nickname tracking and claiming in Zafia Online.
+"""Bot automation for nickname tracking and claiming in Mafia Online.
 
-This module defines the Bot class which connects to the Zafia Online service, monitors
+This module defines the Bot class which connects to the Mafia Online service, monitors
 a list of tracked accounts, and uses predefined entertainer accounts to claim nicknames
 as they become available.
 
