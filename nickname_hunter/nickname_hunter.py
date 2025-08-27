@@ -2,7 +2,24 @@
 # Copyright (c) 2025 unelected
 #
 # This file is part of the project and is licensed under the MIT License.
-# See the LICENSE file in the root of this repository for full license text.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
 
 """Bot automation for nickname tracking and claiming in Mafia Online.
 
@@ -66,7 +83,7 @@ class Bot:
         load_dotenv()
         account_nickname: str = os.getenv("EMAIL") or ""
         account_password: str = os.getenv("PASSWORD") or ""
-        await self.main.sign_in(account_nickname, account_password)
+        await self.main.auth.sign_in(account_nickname, account_password)
         while True:
             await self.check_accounts()
             await asyncio.sleep(sleep_time)
@@ -143,7 +160,7 @@ class Bot:
             dict | None: The user data if found, otherwise None.
         """
         try:
-            return await self.main.get_user(user_id)
+            return await self.main.players.get_user(user_id)
         except (ValueError) as e:
             return await self.handle_search_error(e)
 
@@ -201,7 +218,7 @@ class Bot:
             return
 
         if 0 <= index <= len(self._entertainers):
-            await self.main.sign_in(self._entertainers[index][0], self._entertainers[index][1])
+            await self.main.auth.sign_in(self._entertainers[index][0], self._entertainers[index][1])
             del self._entertainers[index]
         else:
             logging.error("Attempt to log in with a non-existent account")
@@ -213,7 +230,7 @@ class Bot:
         Args:
             nickname (str): The nickname to assign to the user.
         """
-        await self.main.username_set(nickname)
+        await self.main.user.username_set(nickname)
         logging.info(f"Took the nickname: {nickname}")
 
     async def enter_nickname(self, nickname: str, 
