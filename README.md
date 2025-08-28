@@ -74,7 +74,7 @@ Notifications are printed to the console when a nickname is successfully claimed
 
 ---
 
-## ⚠️ Disclaimer:
+⚠️ Disclaimer:
 This script automatically claims released nicknames, but it does not interfere with or harm other players.
 It should be used only for testing, development, or personal experiments.
 
