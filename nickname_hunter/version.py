@@ -1,11 +1,19 @@
-# Copyright (c) 2024 ZS
-# Copyright (c) 2025 unelected
+# Project: nickname_hunter
+# License: GNU General Public License v3.0 only
 #
-# This file is part of the project and is dual-licensed under either:
-# - The MIT License
-# - The GNU Affero General Public License v3.0 only
+# This file is part of the zafiaonline project.
 #
-# You may choose either license.
-# See the LICENSE file in the root of this repository for full license texts.
+# Copyright (C) 2025 unelected
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, version 3.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# See the LICENSE file in the root of this repository for full license text.
 
 __version__ = "3.0.0"
