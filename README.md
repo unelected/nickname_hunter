@@ -31,9 +31,17 @@ pip install -r requirements.txt
 
 ## Configuration
 
-All settings are defined in `config.json`.
+The script uses two types of credentials:
 
-Example:
+1. **`.env` file** — stores the account used for **monitoring nickname availability**.
+   Example `.env`:
+
+   ```env
+   EMAIL=your_email@example.com
+   PASSWORD=your_password
+   ```
+
+2. **`config.json`** — stores the list of accounts that will **claim nicknames** once they become available, and the nicknames to track:
 
 ```json
 {
@@ -42,14 +50,14 @@ Example:
     ["email2@example.com", "password2"]
   ],
   "trackeds": [
-    ["nickname_id_1", ""],
+    ["nickname_id_1", "nickname"],
     ["nickname_id_2", ""]
   ]
 }
 ```
 
-* `entertainers`: List of Mafia Online accounts (email/password) used for checking nickname availability.
-* `trackeds`: List of nickname IDs you want to monitor.
+* `entertainers`: List of Mafia Online accounts (email/password) used to **log in and claim nicknames** once they become available.
+* `trackeds`: List of nickname IDs you want to monitor and attempt to claim.
 
 ---
 
@@ -60,8 +68,15 @@ Run the script from the command line:
 ```bash
 python nickname_hunter.py
 ```
+The script will read your config.json, monitor the specified nicknames,
+and attempt to claim them automatically once they are released.
+Notifications are printed to the console when a nickname is successfully claimed.
 
-The script will read your `config.json`, start monitoring the nicknames, and print notifications to the console when any becomes available.
+---
+
+## ⚠️ Disclaimer:
+This script automatically claims released nicknames, but it does not interfere with or harm other players.
+It should be used only for testing, development, or personal experiments.
 
 ---
 
