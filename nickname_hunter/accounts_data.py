@@ -1,20 +1,23 @@
 # Project: nickname_hunter
-# License: GNU General Public License v3.0 only
+# License: GNU Affero General Public License v3.0 only
 #
 # This file is part of the zafiaonline project.
 #
 # Copyright (C) 2025 unelected
 #
 # This program is free software: you can redistribute it and/or modify it under
-# the terms of the GNU General Public License as published by the Free Software
+# the terms of the GNU Affero General Public License as published by the Free Software
 # Foundation, version 3.
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
+# GNU Affero General Public License for more details.
 #
-# See the LICENSE file in the root of this repository for full license text.
+# You should have received a copy of the GNU Affero General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
+#
+# See the LICENSE file in the root of this repository for the full license text.
 
 """
 Loads account credentials and tracked user data from a JSON file.
