@@ -1,7 +1,7 @@
 # Project: nickname_hunter
 # License: GNU Affero General Public License v3.0 only
 #
-# This file is part of the zafiaonline project.
+# This file is part of the nickname_hunter project.
 #
 # Copyright (C) 2025 unelected
 #
