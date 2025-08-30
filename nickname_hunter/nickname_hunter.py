@@ -39,6 +39,7 @@ from zafiaonline.structures import PacketDataKeys
 from zafiaonline.main import Client
 
 from accounts_data import AccountsData
+from info import get_info
 
 
 # Script powered by zakovskiy && forked by unelected
@@ -59,6 +60,7 @@ class Bot:
     def __init__(self):
         """Initializes the bot with client and account data."""
         self.main: Client = Client()
+        self.searcher: Client = Client()
         self._accounts_data: AccountsData = AccountsData()
         self._accounts_data.get_accounts()
         self._entertainers: list[list[str]] = self._accounts_data.entertainers
@@ -82,7 +84,7 @@ class Bot:
         load_dotenv()
         account_nickname: str = os.getenv("EMAIL") or ""
         account_password: str = os.getenv("PASSWORD") or ""
-        await self.main.auth.sign_in(account_nickname, account_password)
+        await self.searcher.auth.sign_in(account_nickname, account_password)
         while True:
             await self.check_accounts()
             await asyncio.sleep(sleep_time)
@@ -138,7 +140,8 @@ class Bot:
         """
         if account is None:
             return None
-        player: dict | None = account.get(PacketDataKeys.USER, None)
+        profile: dict = account.get(PacketDataKeys.USER_PROFILE, {})
+        player: dict | None = profile.get(PacketDataKeys.PROFILE_USER_DATA, None)
         if player is not None:
             searched_nickname: str | None = player.get(PacketDataKeys.USERNAME, None)
             return searched_nickname
@@ -159,7 +162,7 @@ class Bot:
             dict | None: The user data if found, otherwise None.
         """
         try:
-            return await self.main.players.get_user(user_id)
+            return await self.searcher.players.get_user(user_id)
         except (ValueError) as e:
             return await self.handle_search_error(e)
 
@@ -262,9 +265,10 @@ if __name__ == "__main__":
     logging.basicConfig(level = logging.INFO,
                         format = "%(asctime)s - %(levelname)s - %(message)s",
                         datefmt = "%H:%M:%S")
+    get_info()
     bot: Bot = Bot()
 
     try:
         asyncio.run(bot.main_function(sleep_time = .5))
     except KeyboardInterrupt:
-        logging.info("успешный выход из программы")
+        pass
